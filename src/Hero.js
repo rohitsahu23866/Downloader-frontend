@@ -8,28 +8,26 @@ const Hero = () => {
   const [isDownloading, setIsDownloading] = useState(false);
 
  // Example of an API call in your React app
-const handleDownload = async () => {
-    try {
-      const response = await fetch('https://downloader-backend-t4xz.onrender.com/download', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: videoUrl }),
-      });
+ const handleDownload = async () => {
+  try {
+    const response = await fetch('/api/downloadVideo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: 'https://www.youtube.com/watch?v=YOUR_VIDEO_ID' }),
+    });
+
+    if (response.ok) {
       const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'video.mp4'; // Default name for the downloaded file
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error:', error);
+      setDownloadedVideo(URL.createObjectURL(blob));
+    } else {
+      console.error('Error downloading video:', response.statusText);
     }
-  };
+  } catch (error) {
+    console.error('Error downloading video:', error);
+  }
+};
   
   
 
